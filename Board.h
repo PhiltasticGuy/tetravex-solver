@@ -62,10 +62,7 @@ public:
     void debug() const;
 
     bool solve();
-    Piece* solveStack();
-    Piece* solveStack2();
-    bool solveSequential(int position);
-    Piece* solveTetra();
+    bool solveRecursive(int position);
+    Piece* solveIteration();
     bool solveOpenMP(int position);
-    bool solve3(int position);
 };

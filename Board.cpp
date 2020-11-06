@@ -92,7 +92,8 @@ void Board::debug() const {
 
 bool Board::solve() {
     auto begin = std::chrono::steady_clock::now();
-    Piece* solution = solveIteration();
+    // Piece* solution = solveIteration();
+    Piece* solution = solveThreads();
     auto end = std::chrono::steady_clock::now();
 
     auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
@@ -117,7 +118,6 @@ bool Board::solveRecursive(const int position) {
         for (int i = 0; i < _size; i++) {
             cout << "\tPiece: " << i
                  << " - " << _pieces[i] << endl;
-                //  << " - " << (!_pieces[i].isUsed() && isValidMove(&_pieces[i], position) ? "Processed" : "  Skipped") << endl;
             if (!_pieces[i].isUsed()) {
                 if (isValidMove(_solution, &_pieces[i], position)) {
                     _pieces[i].setUsed(true);
@@ -141,43 +141,42 @@ bool Board::solveRecursive(const int position) {
 }
 
 Piece* Board::solveIteration() {
-    std::vector<solve_state> stack;
     Piece* solution = new Piece[_size];
-    bool isComplete = false;
     
     bool states[_size];
     std::fill(states, states+_size, false);
-
-    stack.push_back(solve_state{0, 0, 0, Board::DIRECTION_RIGHT});
     
+    // Set the starting piece.
+    std::vector<solve_state> stack = {solve_state{0, 0, 0}};
+    
+    bool isComplete = false;
     while(!stack.empty() && !isComplete) {
         solve_state current = stack.back();
 
-        // cout << "Position: " << current.position << endl;
+        cout << "Position: " << current.position << endl;
         if (current.position == _size) {
             isComplete = true;
         }
         else {
-            bool hasPushed = false;
+            bool hasPlacedPiece = false;
             for (int i = current.piece; i < _size; i++) {
-                // cout << "\tPiece: " << i
-                //      << " - " << _pieces[i] << endl;
-                    //  << " - " << (!_pieces[i].isUsed() && isValidMove(&_pieces[i], position) ? "Processed" : "  Skipped") << endl;
+                cout << "\tPiece: " << i
+                     << " - " << _pieces[i] << endl;
                 if (!states[i]) {
                     if (isValidMove(solution, &_pieces[i], current.position)) {
                         states[i] = true;
                         solution[current.position] = _pieces[i];
 
                         // PUSH!!!
-                        stack.push_back(solve_state{current.position+1, 0, i, Board::DIRECTION_RIGHT});
-                        hasPushed = true;
+                        stack.push_back(solve_state{current.position+1, 0, i});
+                        hasPlacedPiece = true;
                         break;
                     }
                 }
             }
 
-            if (!hasPushed) {
-                // cout << "\tNo valid pieces for position " << current.position << "!" << endl;
+            if (!hasPlacedPiece) {
+                cout << "\tNo valid pieces for position " << current.position << "!" << endl;
                 
                 // Undo the move since it was invalid!
                 states[current.popPiece] = false;
@@ -194,6 +193,80 @@ Piece* Board::solveIteration() {
     cout << "Is Completed: " << (isComplete ? "true" : "false") << endl;
 
     return solution;
+}
+
+Piece* Board::solveThreads() {
+    Piece* result;
+    std::vector<std::thread> vt;
+
+    bool isComplete = false;
+    for (int piece = 0; piece < _size; piece++) {
+        auto action = [&isComplete, this, &result, piece]() {
+            Piece* solution = new Piece[_size];
+            bool states[_size];
+            std::fill(states, states+_size, false);
+            
+            // Set the starting piece.
+            std::vector<solve_state> stack;
+            stack.push_back(solve_state{0, piece, 0});
+
+            while(!stack.empty() && !isComplete) {
+                solve_state current = stack.back();
+
+                // cout << "Position: " << current.position << endl;
+                if (current.position == _size) {
+                    isComplete = true; // MUTEX ME!!!
+                    result = solution; // MUTEX ME!!!
+                    return;
+                }
+                else {
+                    bool hasPlacedPiece = false;
+                    for (int i = current.piece; i < _size; i++) {
+                        // cout << "\tPiece: " << i
+                        //     << " - " << _pieces[i] << endl;
+                        if (!states[i]) {
+                            if (isValidMove(solution, &_pieces[i], current.position)) {
+                                states[i] = true;
+                                solution[current.position] = _pieces[i];
+
+                                // PUSH!!!
+                                stack.push_back(solve_state{current.position+1, 0, i});
+                                hasPlacedPiece = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!hasPlacedPiece) {
+                        // cout << "\tNo valid pieces for position " << current.position << "!" << endl;
+                        
+                        // Undo the move since it was invalid!
+                        states[current.popPiece] = false;
+                        solution[current.position] = Piece::empty();
+                        
+                        stack.pop_back();
+
+                        // The piece following the one we pushed onto the stack.
+                        stack.back().piece = current.popPiece + 1;
+                    }
+                }
+            }
+
+            if (!isComplete) {
+                if (solution != NULL) {
+                    delete solution;
+                }
+            }
+        };
+
+        vt.push_back(std::thread(action));
+    }
+
+    for (auto &t : vt) {
+        t.join();
+    }
+
+    return result;
 }
 
 bool Board::solveOpenMP(const int position) {
@@ -249,16 +322,6 @@ bool Board::isValidMove(const Piece* solution, const Piece* piece, const int ind
         rightIdx = index + 1,
         bottomIdx = index + _width;
 
-// cout << "==================================================" << endl
-//     << " Piece: " << *piece << endl
-//     << " Index: " << index << endl
-//     << "  Left: " << leftIdx << " " << (index % _width != 0 ? _solution[leftIdx] : Piece()) << endl
-//     << "   Top: " << topIdx << " " << (index >= _width ? _solution[topIdx] : Piece()) << endl
-//     << " Right: " << rightIdx << " " << ((index + 1) % _width != 0 ? _solution[rightIdx] : Piece()) << endl
-//     << "Bottom: " << bottomIdx << " " << (index + _width < _size ? _solution[bottomIdx] : Piece()) << endl
-//     // << piece << " at position " << index << " is " << (isValid ? "Valid" : "Invalid") << endl
-//     << "==================================================" << endl;
-
     if ((index % _width == 0 || solution[leftIdx].isValidAtLeftOf(piece)) &&
         (index < _width  || solution[topIdx].isValidAtTopOf(piece)) &&
         (rightIdx % _width == 0 || solution[rightIdx].isValidAtRightOf(piece)) &&
@@ -270,7 +333,7 @@ bool Board::isValidMove(const Piece* solution, const Piece* piece, const int ind
     return false;
 }
 
-void Board::displaySolution(Piece* solution) {
+void Board::displaySolution(Piece* solution) const {
     std::cout << "==================================================" << std::endl
          << "Solution: " << std::endl;
 
@@ -284,7 +347,7 @@ void Board::displaySolution(Piece* solution) {
     std::cout << "==================================================" << std::endl;
 }
 
-void Board::displaySolution(std::vector<Piece> solution) {
+void Board::displaySolution(std::vector<Piece> solution) const {
     std::cout << "==================================================" << std::endl
          << "Solution: " << std::endl;
 

@@ -21,18 +21,10 @@ struct solve_state {
     int position = -1;
     int piece = -1;
     int popPiece = -1;
-    int direction = -1;
-    bool attempts[4] = { false, false, false, false };
 };
 
 class Board {
 private:
-    static const int DIRECTION_NONE = -1;
-    static const int DIRECTION_RIGHT = 0;
-    static const int DIRECTION_BOTTOM = 1;
-    static const int DIRECTION_LEFT = 2;
-    static const int DIRECTION_TOP = 3;
-
     int _size;
     int _width;
     int _height;
@@ -48,8 +40,8 @@ private:
 
     int* getAdjacentPositions(const int index) const;
     bool isValidMove(const Piece* solution, const Piece* piece, const int index) const;
-    void displaySolution(Piece* solution);
-    void displaySolution(std::vector<Piece> solution);
+    void displaySolution(Piece* solution)const;
+    void displaySolution(std::vector<Piece> solution)const;
 public:
     Board();
     Board(const std::string filePath);
@@ -64,5 +56,6 @@ public:
     bool solve();
     bool solveRecursive(int position);
     Piece* solveIteration();
+    Piece* solveThreads();
     bool solveOpenMP(int position);
 };

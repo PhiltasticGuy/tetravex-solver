@@ -9,7 +9,7 @@ Board::Board(const std::string filePath) {
 
 Board::~Board() {
     if (_solution != NULL) {
-        delete _solution;
+        delete[] _solution;
     }
     // if (_solver != NULL) {
     //     delete _solver;
@@ -91,9 +91,11 @@ void Board::debug() const {
 // }
 
 bool Board::solve() {
+    Piece* solution;
     auto begin = std::chrono::steady_clock::now();
+    if (solveRecursive(0)) solution = _solution;
     // Piece* solution = solveIteration();
-    Piece* solution = solveThreads();
+    // solution = solveThreads();
     auto end = std::chrono::steady_clock::now();
 
     auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
@@ -103,21 +105,21 @@ bool Board::solve() {
     this->displaySolution(solution);
 
     if (solution != NULL) {
-        delete solution;
+        delete[] solution;
     }
 
     return false;
 }
 
 bool Board::solveRecursive(const int position) {
-    cout << "Position: " << position << endl;
+    // cout << "Position: " << position << endl;
     if (position == _size) {
         return true;
     }
     else {
         for (int i = 0; i < _size; i++) {
-            cout << "\tPiece: " << i
-                 << " - " << _pieces[i] << endl;
+            // cout << "\tPiece: " << i
+            //      << " - " << _pieces[i] << endl;
             if (!_pieces[i].isUsed()) {
                 if (isValidMove(_solution, &_pieces[i], position)) {
                     _pieces[i].setUsed(true);
@@ -128,10 +130,10 @@ bool Board::solveRecursive(const int position) {
                     }
                     
                     // Undo the move since it was invalid!
-                    cout << "\tNo valid pieces for position " << position+1 << "!" << endl;
+                    // cout << "\tNo valid pieces for position " << position+1 << "!" << endl;
                     _solution[position] = Piece::empty();
                     _pieces[i].setUsed(false);
-                    cout << "Position: " << position << endl;
+                    // cout << "Position: " << position << endl;
                 }
             }
         }
@@ -252,10 +254,8 @@ Piece* Board::solveThreads() {
                 }
             }
 
-            if (!isComplete) {
-                if (solution != NULL) {
-                    delete solution;
-                }
+            if (solution != NULL) {
+                delete[] solution;
             }
         };
 
@@ -267,53 +267,6 @@ Piece* Board::solveThreads() {
     }
 
     return result;
-}
-
-bool Board::solveOpenMP(const int position) {
-    if (position == _size) {
-        return true;
-    }
-
-    bool isCompleted = false;
-    std::vector<std::thread> vt;
-
-    for (int i = 0; i < _size; i++) {
-        auto action = [this, &i, position, &isCompleted] () {
-            if (!_pieces[i].isUsed()) {
-                const int leftIdx = position - 1,
-                    topIdx = position - _width,
-                    rightIdx = position + 1,
-                    bottomIdx = position + _width;
-
-                if ((position % _width == 0 || _solution[leftIdx].isValidAtLeftOf(&_pieces[i])) &&
-                    (position < _width  || _solution[topIdx].isValidAtTopOf(&_pieces[i])) &&
-                    (rightIdx % _width == 0 || _solution[rightIdx].isValidAtRightOf(&_pieces[i])) &&
-                    (bottomIdx >= _size || _solution[bottomIdx].isValidAtBottomOf(&_pieces[i]))) 
-                {
-                    _pieces[i].setUsed(true);
-                    _solution[position] = _pieces[i];
-
-                    isCompleted = solveRecursive(position+1);
-                    
-                    if (isCompleted) {
-                        i = _size;
-                    }
-                    else {
-                        // Undo the move since it was invalid!
-                        _solution[position] = Piece::empty();
-                        _pieces[i].setUsed(false);
-                    }
-                }
-            }
-        };
-        vt.push_back(std::thread(action));
-    }
-
-    for(int i = 0; i < vt.size(); i++) {
-        vt[i].join();
-    }
-
-    return isCompleted;
 }
 
 bool Board::isValidMove(const Piece* solution, const Piece* piece, const int index) const {

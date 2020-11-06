@@ -9,7 +9,7 @@ private:
     static const int INDEX_RIGHT = 2;
     static const int INDEX_BOTTOM = 3;
 
-    int* _values;
+    int _values[4] = { -1, -1, -1, -1 };
     bool _isUsed = false;
 
 public:
@@ -29,8 +29,6 @@ public:
     void setUsed(const bool value);
 
     bool isEmptyPiece() const;
-    friend bool operator== (const Piece &c1, const Piece &c2);
-    friend bool operator!= (const Piece &c1, const Piece &c2);
 
     bool isValidAtLeftOf(const Piece* piece) const;
     bool isValidAtTopOf(const Piece* piece) const;

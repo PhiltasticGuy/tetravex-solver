@@ -1,8 +1,4 @@
 #include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <vector>
-#include <chrono>
 #include "Board.h"
 
 using std::cout;

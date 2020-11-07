@@ -6,11 +6,11 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include "Piece.h"
-#include "ThreadPool.h"
 #include <chrono>
 #include <omp.h>
 #include "utils.h"
+#include "Piece.h"
+#include "ThreadPool.h"
 // #include "ITetravexSolver.h"
 // #include "SequentialSolver.h"
 
@@ -24,37 +24,37 @@ struct solve_state {
 };
 
 class Board {
-    private:
-        int _size;
-        int _width;
-        int _height;
+private:
+    int _size;
+    int _width;
+    int _height;
 
-        std::vector<Piece> _pieces;
-        Piece* _solution;
+    std::vector<Piece> _pieces;
+    Piece* _solution;
 
-        // SequentialSolver* _solver;
-        // ThreadPool _tp = ThreadPool(1);
+    // SequentialSolver* _solver;
+    // ThreadPool _tp = ThreadPool(1);
 
-        bool isFileExists(const std::string filename) const;
-        std::vector<Piece> loadGameData(const std::string filePath);
+    bool isFileExists(const std::string filename) const;
+    std::vector<Piece> loadGameData(const std::string filePath);
 
-        int* getAdjacentPositions(const int index) const;
-        bool isValidMove(const Piece* solution, const Piece* piece, const int index) const;
-        void displaySolution(Piece* solution)const;
-    public:
-        Board();
-        Board(const std::string filePath);
-        ~Board();
+    int* getAdjacentPositions(const int index) const;
+    bool isValidMove(const Piece* solution, const Piece* piece, const int index) const;
+    void displaySolution(Piece* solution)const;
+public:
+    Board();
+    Board(const std::string filePath);
+    ~Board();
 
-        int getSize() const;
-        int getWidth() const;
-        Piece* getSolution();
-        
-        void debug() const;
+    int getSize() const;
+    int getWidth() const;
+    Piece* getSolution();
+    
+    void debug() const;
 
-        bool solve();
-        bool solveRecursive(int position);
-        Piece* solveIteration();
-        Piece* solveThreads();
-        bool solveOpenMP(int position);
+    bool solve();
+    bool solveRecursive(int position);
+    Piece* solveIteration();
+    Piece* solveThreads();
+    bool solveOpenMP(int position);
 };

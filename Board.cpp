@@ -299,22 +299,3 @@ void Board::displaySolution(Piece* solution) const {
     }
     std::cout << "==================================================" << std::endl;
 }
-
-void Board::displaySolution(std::vector<Piece> solution) const {
-    std::cout << "==================================================" << std::endl
-         << "Solution: " << std::endl;
-
-    for (int i = 0; i < _size; i++) {
-        if (i < solution.size()) {
-            std::cout << solution[i] << " ";
-        }
-        else {  
-            std::cout << Piece() << " ";
-        }
-        
-        if ((i + 1) % _width == 0) {
-            std::cout << std::endl;
-        }
-    }
-    std::cout << "==================================================" << std::endl;
-}

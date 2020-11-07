@@ -41,7 +41,6 @@ class Board {
         int* getAdjacentPositions(const int index) const;
         bool isValidMove(const Piece* solution, const Piece* piece, const int index) const;
         void displaySolution(Piece* solution)const;
-        void displaySolution(std::vector<Piece> solution)const;
     public:
         Board();
         Board(const std::string filePath);

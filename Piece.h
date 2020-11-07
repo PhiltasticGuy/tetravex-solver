@@ -21,14 +21,16 @@ public:
     Piece();
     Piece(const int leftValue, const int topValue, const int rightValue, const int bottomValue);
 
+    friend bool operator== (const Piece &lhs, const Piece &rhs);
+
     int GetLeft() const;
     int GetTop() const;
     int GetRight() const;
     int GetBottom() const;
-    bool isUsed() const;
-    void setUsed(const bool value);
 
     bool isEmptyPiece() const;
+    bool isUsed() const;
+    void setUsed(const bool value);
 
     bool isValidAtLeftOf(const Piece* piece) const;
     bool isValidAtTopOf(const Piece* piece) const;

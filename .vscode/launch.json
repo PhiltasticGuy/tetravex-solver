@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}\\tetravex-solver-debug.exe",
-            "args": ["./data/5x5.txt"],
+            "args": ["./data/7x7.txt"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

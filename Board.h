@@ -30,7 +30,7 @@ private:
     int _height;
 
     std::vector<Piece> _pieces;
-    Piece* _solution;
+    // Piece* _solution;
 
     // SequentialSolver* _solver;
     // ThreadPool _tp = ThreadPool(1);
@@ -53,8 +53,10 @@ public:
     void debug() const;
 
     bool solve();
-    bool solveRecursive(int position);
+    void solveCore(const int size, const int startPiece, bool &isComplete, Piece* result);
+    // bool solveRecursive(int position);
     Piece* solveIteration();
     Piece* solveThreads();
+    Piece* solveThreadPool();
     bool solveOpenMP(int position);
 };

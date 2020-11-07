@@ -12,9 +12,6 @@ int main(int argc, char** argv) {
 
     Board b(argv[1]);
     b.debug();
-
-    // b.solveRecursive(0);
-    // displaySolution(b.getSize(), b.getWidth(), b.getSolution());
     b.solve();
 
     return 0;

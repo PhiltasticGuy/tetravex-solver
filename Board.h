@@ -53,7 +53,6 @@ public:
     void debug() const;
 
     bool solve();
-    void solveCore(const int size, const int startPiece, bool &isComplete, Piece* result);
     // bool solveRecursive(int position);
     Piece* solveIteration();
     Piece* solveThreads();

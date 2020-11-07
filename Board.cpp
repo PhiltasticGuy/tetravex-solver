@@ -92,6 +92,8 @@ void Board::debug() const {
 
 bool Board::solve() {
     Piece* solution;
+    // printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveIteration(); }));
+    // printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreads(); }));
     printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreadPool(); }));
     cout << endl;
     this->displaySolution(solution);
@@ -260,62 +262,6 @@ Piece* Board::solveThreads() {
     return result;
 }
 
-void Board::solveCore(const int size, const int startPiece, bool &isComplete, Piece* result) {
-    Piece* solution = new Piece[size];
-    bool states[size];
-    std::fill(states, states + size, false);
-    
-    // Set the starting piece.
-    std::vector<solve_state> stack;
-    stack.push_back(solve_state{0, startPiece, 0});
-
-    while(!stack.empty() && !isComplete) {
-        solve_state current = stack.back();
-
-        // cout << "Position: " << current.position << endl;
-        if (current.position == size) {
-            isComplete = true; // MUTEX ME!!!
-            result = solution;// std::copy(solution, solution + _size, result);
-            return;
-        }
-        else {
-            bool hasPlacedPiece = false;
-            for (int i = current.piece; i < size; i++) {
-                // cout << "\tPiece: " << i
-                //     << " - " << _pieces[i] << endl;
-                if (!states[i]) {
-                    if (isValidMove(solution, &_pieces[i], current.position)) {
-                        states[i] = true;
-                        solution[current.position] = _pieces[i];
-
-                        // PUSH!!!
-                        stack.push_back(solve_state{current.position+1, 0, i});
-                        hasPlacedPiece = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!hasPlacedPiece) {
-                // cout << "\tNo valid pieces for position " << current.position << "!" << endl;
-                
-                // Undo the move since it was invalid!
-                states[current.popPiece] = false;
-                solution[current.position] = Piece::empty();
-                
-                stack.pop_back();
-
-                // The piece following the one we pushed onto the stack.
-                stack.back().piece = current.popPiece + 1;
-            }
-        }
-    }
-
-    if (solution != NULL) {
-        delete[] solution;
-    }
-}
-
 Piece* Board::solveThreadPool() {
     Piece* result;
     
@@ -323,7 +269,6 @@ Piece* Board::solveThreadPool() {
     bool isComplete = false;
     for (int piece = 0; piece < _size; piece++) {
         auto action = [&isComplete, this, &result, piece] {
-            // solveCore(_size, 0, isComplete, result);
             Piece* solution = new Piece[_size];
             bool states[_size];
             std::fill(states, states + _size, false);

@@ -66,15 +66,10 @@ void ThreadPool::monitorPool() {
         }
 
         // Exécuter la tâche.
-        auto begin = std::chrono::steady_clock::now();
-        task();
-        auto end = std::chrono::steady_clock::now();
-
-        auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-        double s = elapsed.count() / 1e+9;
+        double s = stopwatch([task] { task(); });
         {
             std::lock_guard<std::mutex> lock(_mutexDebug);
-            printf("Thread %d: END TASK (%.8fs)\n", this_id, s);
+            printf("Thread 0x%x: END TASK (%.8fs)\n", this_id, s);
         }
 
         // {

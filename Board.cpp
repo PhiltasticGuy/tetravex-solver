@@ -92,15 +92,6 @@ void Board::debug() const {
 
 bool Board::solve() {
     Piece* solution;
-    // auto begin = std::chrono::steady_clock::now();
-    // // if (solveRecursive(0)) solution = _solution;
-    // // solution = solveIteration();
-    // // solution = solveThreads();
-    // solution = solveThreadPool();
-    // auto end = std::chrono::steady_clock::now();
-
-    // auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-    // double s = elapsed.count() / 1e+9;
     printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreadPool(); }));
     cout << endl;
     this->displaySolution(solution);

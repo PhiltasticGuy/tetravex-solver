@@ -12,17 +12,3 @@ int char2digit(char c) {
     // '9' - '0' => 9
     return c - '0';
 }
-
-void displaySolution(const int size, const int width, Piece* solution) {
-    std::cout << "==================================================" << std::endl
-         << "Solution: " << std::endl;
-
-    for (int i = 0; i < size; i++) {
-        std::cout << solution[i] << " ";
-        
-        if ((i + 1) % width == 0) {
-            std::cout << std::endl;
-        }
-    }
-    std::cout << "==================================================" << std::endl;
-}

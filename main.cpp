@@ -1,5 +1,4 @@
 #include <iostream>
-#include "Board.h"
 #include "TetravexSolver.h"
 #include "IterativeSolver.h"
 #include "ThreadVectorSolver.h"

@@ -93,8 +93,8 @@ void Board::debug() const {
 bool Board::solve() {
     Piece* solution;
     // printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveIteration(); }));
-    // printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreads(); }));
-    printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreadPool(); }));
+    printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreads(); }));
+    // printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreadPool(); }));
     cout << endl;
     this->displaySolution(solution);
 
@@ -200,14 +200,15 @@ Piece* Board::solveCore(const int piece, bool &isComplete) {
     std::vector<solve_state> stack;
     stack.push_back(solve_state{0, piece, 0});
     while(!stack.empty() && !isComplete) {
-        {
-            // std::lock_guard<std::mutex> lock(_mutex);
-            // if (isComplete) break;
-        }
+        // {
+        //     std::lock_guard<std::mutex> lock(_mutex);
+        //     if (isComplete) break;
+        // }
         solve_state current = stack.back();
 
         // cout << "Position: " << current.position << endl;
         if (current.position == _size) {
+            std::lock_guard<std::mutex> lock(_mutex);
             isComplete = true;
             return solution;
         }
@@ -286,65 +287,13 @@ Piece* Board::solveThreads() {
 Piece* Board::solveThreadPool() {
     Piece* result;
     
-    ThreadPool tp(49);
+    // Définir le nombre maximum de thread égal au nombre total de pièces. 
+    ThreadPool tp(_size);
     bool isComplete = false;
     for (int piece = 0; piece < _size; piece++) {
         auto action = [&isComplete, this, &result, piece] {
             auto temp = solveCore(piece, isComplete);
             if (temp != NULL) result = temp;
-            // Piece* solution = new Piece[_size];
-            // bool states[_size];
-            // std::fill(states, states + _size, false);
-            
-            // // Set the starting piece.
-            // std::vector<solve_state> stack;
-            // stack.push_back(solve_state{0, piece, 0});
-
-            // while(!stack.empty() && !isComplete) {
-            //     solve_state current = stack.back();
-
-            //     // cout << "Position: " << current.position << endl;
-            //     if (current.position == _size) {
-            //         isComplete = true; // MUTEX ME!!!
-            //         result = solution; // std::copy(solution, solution + _size, result);
-            //         return;
-            //     }
-            //     else {
-            //         bool hasPlacedPiece = false;
-            //         for (int i = current.piece; i < _size; i++) {
-            //             // cout << "\tPiece: " << i
-            //             //     << " - " << _pieces[i] << endl;
-            //             if (!states[i]) {
-            //                 if (isValidMove(solution, &_pieces[i], current.position)) {
-            //                     states[i] = true;
-            //                     solution[current.position] = _pieces[i];
-
-            //                     // PUSH!!!
-            //                     stack.push_back(solve_state{current.position+1, 0, i});
-            //                     hasPlacedPiece = true;
-            //                     break;
-            //                 }
-            //             }
-            //         }
-
-            //         if (!hasPlacedPiece) {
-            //             // cout << "\tNo valid pieces for position " << current.position << "!" << endl;
-                        
-            //             // Undo the move since it was invalid!
-            //             states[current.popPiece] = false;
-            //             solution[current.position] = Piece::empty();
-                        
-            //             stack.pop_back();
-
-            //             // The piece following the one we pushed onto the stack.
-            //             stack.back().piece = current.popPiece + 1;
-            //         }
-            //     }
-            // }
-
-            // if (solution != NULL) {
-            //     delete[] solution;
-            // }
         };
 
         tp.add(action);

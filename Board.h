@@ -11,8 +11,6 @@
 #include "utils.h"
 #include "Piece.h"
 #include "ThreadPool.h"
-// #include "ITetravexSolver.h"
-// #include "SequentialSolver.h"
 
 using std::cout;
 using std::endl;
@@ -31,10 +29,6 @@ private:
 
     std::vector<Piece> _pieces;
     std::mutex _mutex;
-    // Piece* _solution;
-
-    // SequentialSolver* _solver;
-    // ThreadPool _tp = ThreadPool(1);
 
     bool isFileExists(const std::string filename) const;
     std::vector<Piece> loadGameData(const std::string filePath);
@@ -42,6 +36,8 @@ private:
     int* getAdjacentPositions(const int index) const;
     bool isValidMove(const Piece* solution, const Piece* piece, const int index) const;
     void displaySolution(Piece* solution)const;
+
+    Piece* solve(const int piece, bool &isComplete);
 public:
     Board();
     Board(const std::string filePath);
@@ -54,7 +50,6 @@ public:
     void debug() const;
 
     bool solve();
-    Piece* solveCore(const int piece, bool &isComplete);
     // bool solveRecursive(int position);
     Piece* solveIteration();
     Piece* solveThreads();

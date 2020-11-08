@@ -93,8 +93,8 @@ void Board::debug() const {
 bool Board::solve() {
     Piece* solution;
     // printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveIteration(); }));
-    printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreads(); }));
-    // printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreadPool(); }));
+    // printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreads(); }));
+    printf("Temps d'execution: %.8fs\n", stopwatch([this, &solution] { solution = solveThreadPool(); }));
     cout << endl;
     this->displaySolution(solution);
 
@@ -191,7 +191,7 @@ Piece* Board::solveIteration() {
     return solution;
 }
 
-Piece* Board::solveCore(const int piece, bool &isComplete) {
+Piece* Board::solve(const int piece, bool &isComplete) {
     Piece* solution = new Piece[_size];
     bool states[_size];
     std::fill(states, states+_size, false);
@@ -208,7 +208,7 @@ Piece* Board::solveCore(const int piece, bool &isComplete) {
 
         // cout << "Position: " << current.position << endl;
         if (current.position == _size) {
-            std::lock_guard<std::mutex> lock(_mutex);
+            // std::lock_guard<std::mutex> lock(_mutex);
             isComplete = true;
             return solution;
         }
@@ -260,7 +260,7 @@ Piece* Board::solveThreads() {
     for (int piece = 0; piece < _size; piece++) {
         auto action = [&isComplete, this, &result, piece]() {
             auto begin = std::chrono::steady_clock::now();
-            auto temp = solveCore(piece, isComplete);
+            auto temp = solve(piece, isComplete);
             auto end = std::chrono::steady_clock::now();
             if (temp != NULL) result = temp;
 
@@ -292,7 +292,7 @@ Piece* Board::solveThreadPool() {
     bool isComplete = false;
     for (int piece = 0; piece < _size; piece++) {
         auto action = [&isComplete, this, &result, piece] {
-            auto temp = solveCore(piece, isComplete);
+            auto temp = solve(piece, isComplete);
             if (temp != NULL) result = temp;
         };
 

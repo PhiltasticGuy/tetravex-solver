@@ -10,7 +10,6 @@ private:
     static const int INDEX_BOTTOM = 3;
 
     int _values[4] = { -1, -1, -1, -1 };
-    bool _isUsed = false;
 
 public:
     static Piece& empty() { 
@@ -29,8 +28,6 @@ public:
     int GetBottom() const;
 
     bool isEmptyPiece() const;
-    bool isUsed() const;
-    void setUsed(const bool value);
 
     bool isValidAtLeftOf(const Piece* piece) const;
     bool isValidAtTopOf(const Piece* piece) const;

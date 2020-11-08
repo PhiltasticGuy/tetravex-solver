@@ -1,7 +1,7 @@
 #include "IterativeSolver.h"
 
-IterativeSolver::IterativeSolver(const std::string filePath)
-    : TetravexSolver{filePath}
+IterativeSolver::IterativeSolver(const std::vector<Piece> pieces, const int width)
+    : TetravexSolver{pieces, width}
 {
 }
 
@@ -9,33 +9,32 @@ IterativeSolver::~IterativeSolver()
 {
 }
 
-void IterativeSolver::solve() {
-    auto begin = std::chrono::steady_clock::now();
-    Piece* solution = new Piece[_size];
+Piece* IterativeSolver::solve(const std::vector<Piece> pieces) {
+    Piece* solution = new Piece[pieces.size()];
     
-    bool states[_size];
-    std::fill(states, states+_size, false);
+    bool states[pieces.size()];
+    std::fill(states, states+pieces.size(), false);
     
     // Set the starting piece.
-    std::vector<solve_state> stack = {solve_state{0, 0, 0}};
+    std::vector<solve_state> stack = { solve_state{0, 0, 0} };
     
     bool isComplete = false;
     while(!stack.empty() && !isComplete) {
         solve_state current = stack.back();
 
         // cout << "Position: " << current.position << endl;
-        if (current.position == _size) {
+        if (current.position == pieces.size()) {
             isComplete = true;
         }
         else {
             bool hasPlacedPiece = false;
-            for (int i = current.piece; i < _size; i++) {
+            for (int i = current.piece; i < pieces.size(); i++) {
                 // cout << "\tPiece: " << i
-                //      << " - " << _pieces[i] << endl;
+                //      << " - " << pieces[i] << endl;
                 if (!states[i]) {
-                    if (isValidMove(solution, &_pieces[i], current.position)) {
+                    if (isValidMove(solution, &pieces[i], current.position)) {
                         states[i] = true;
-                        solution[current.position] = _pieces[i];
+                        solution[current.position] = pieces[i];
 
                         // PUSH!!!
                         stack.push_back(solve_state{current.position+1, 0, i});
@@ -59,15 +58,6 @@ void IterativeSolver::solve() {
             }
         }
     }
-    auto end = std::chrono::steady_clock::now();
 
-    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-    double s = elapsed.count() / 1e+9;
-    printf("Temps d'execution: %.8fs\n\n", s);
-
-    TetravexSolver::displaySolution(solution);
-
-    if (solution != NULL) {
-        delete[] solution;
-    };
+    return solution;
 }

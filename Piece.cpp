@@ -34,17 +34,9 @@ int Piece::GetBottom() const {
     return _values[Piece::INDEX_BOTTOM];
 }
 
-bool Piece::isUsed() const {
-    return _isUsed;
-}
-
 bool Piece::isEmptyPiece() const {
     // Utilisons l'opérateur surchargé.
     return *this == empty();
-}
-
-void Piece::setUsed(const bool value) {
-    _isUsed = value;
 }
 
 bool Piece::isValidAtLeftOf(const Piece* piece) const {

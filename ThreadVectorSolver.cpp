@@ -1,7 +1,7 @@
 #include "ThreadVectorSolver.h"
 
-ThreadVectorSolver::ThreadVectorSolver(const std::string filePath)
-    : TetravexSolver{filePath}
+ThreadVectorSolver::ThreadVectorSolver(const std::vector<Piece> pieces, const int width)
+    : TetravexSolver{pieces, width}
 {
 }
 
@@ -9,18 +9,17 @@ ThreadVectorSolver::~ThreadVectorSolver()
 {
 }
 
-void ThreadVectorSolver::solve() {
-    auto begin = std::chrono::steady_clock::now();
-    Piece* result;
+Piece* ThreadVectorSolver::solve(const std::vector<Piece> pieces) {
+    Piece* solution;
     std::vector<std::thread> vt;
 
     bool isComplete = false;
     for (int piece = 0; piece < _size; piece++) {
-        auto action = [&isComplete, this, &result, piece]() {
+        auto action = [&isComplete, this, &solution, piece]() {
             auto begin = std::chrono::steady_clock::now();
-            auto temp = MultithreadedSolver::solve(piece, isComplete);
+            auto temp = MultithreadedSolver::solveAction(piece, isComplete);
             auto end = std::chrono::steady_clock::now();
-            if (temp != NULL) result = temp;
+            if (temp != NULL) solution = temp;
 
             auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
             double s = elapsed.count() / 1e+9;
@@ -38,15 +37,6 @@ void ThreadVectorSolver::solve() {
     for (auto &t : vt) {
         t.join();
     }
-    auto end = std::chrono::steady_clock::now();
 
-    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-    double s = elapsed.count() / 1e+9;
-    printf("\nTemps d'execution: %.8fs\n\n", s);
-
-    TetravexSolver::displaySolution(result);
-
-    if (result != NULL) {
-        delete[] result;
-    };
+    return solution;
 }

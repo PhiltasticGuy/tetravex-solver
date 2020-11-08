@@ -9,8 +9,9 @@ class ThreadPoolSolver: virtual public MultithreadedSolver {
 private:
     std::mutex _mutex;
 
+    Piece* solve(const std::vector<Piece> pieces);
+
 public:
-    ThreadPoolSolver(const std::string filePath);
+    ThreadPoolSolver(const std::vector<Piece> pieces, const int width);
     ~ThreadPoolSolver();
-    void solve();
 };

@@ -1,61 +1,54 @@
 #include "TetravexSolver.h"
 
-TetravexSolver::TetravexSolver(const std::string filePath) {
-    _pieces = loadGameData(filePath);
+TetravexSolver::TetravexSolver(const std::vector<Piece> pieces, const int width) {
+    _pieces = pieces;
+    _width = width;
+    _size = width * width;
 }
 
-bool TetravexSolver::isFileExists(const std::string filename) const {
-    return static_cast<bool>(std::ifstream(filename));
+bool TetravexSolver::isValidMove(const Piece* solution, const Piece* piece, const int index) const {
+    const int leftIdx = index - 1,
+        topIdx = index - _width,
+        rightIdx = index + 1,
+        bottomIdx = index + _width;
+
+    if ((index % _width == 0 || solution[leftIdx].isValidAtLeftOf(piece)) &&
+        (index < _width  || solution[topIdx].isValidAtTopOf(piece)) &&
+        (rightIdx % _width == 0 || solution[rightIdx].isValidAtRightOf(piece)) &&
+        (bottomIdx >= _size || solution[bottomIdx].isValidAtBottomOf(piece))) 
+    {
+        return true;
+    }
+
+    return false;
 }
 
-std::vector<Piece> TetravexSolver::loadGameData(std::string filePath) {
-    if (!isFileExists(filePath)) {
-        std::cout << "ERREUR: Le fichier specife n'a pas pu etre charge.";
-        return {};
-    }
+void TetravexSolver::displaySolution(Piece* solution) const {
+    std::cout << "==================================================" << std::endl
+        << "Solution: " << std::endl;
 
-    std::ifstream file(filePath);
-    std::string line;
-
-    // Lire et traiter la première ligne contenant la taille du Tetravex. 
-    std::getline(file, line);
-    if (line.length() != 3) {
-        throw std::invalid_argument("ERREUR: La premiere ligne du fichier doit obligatoirement contenir 3 caracteres.");
-    }
-
-    _width = char2digit(line[0]);
-    _height = char2digit(line[2]);
-    _size = _width * _height;
-
-    // Lire et instancier toutes les pièces du Tetravex.
-    std::vector<Piece> pieces;
-    while (std::getline(file, line)) {
-        if (line.length() != 7) {
-            throw std::invalid_argument("ERREUR: Une ligne representant une piece tetravex doit obligatoirement contenir 7 caracteres.");
+    for (int i = 0; i < _size; i++) {
+        std::cout << solution[i] << " ";
+        
+        if ((i + 1) % _width == 0) {
+            std::cout << std::endl;
         }
-
-        pieces.push_back(
-            Piece(char2digit(line[0]), char2digit(line[2]), char2digit(line[4]), char2digit(line[6]))
-        );
     }
-
-    file.close();
-
-    return pieces;
+    std::cout << "==================================================" << std::endl;
 }
 
-void TetravexSolver::debug() const {
-    std::cout << "==================================================" << std::endl
-         << " Width: " << _width << std::endl
-         << "Height: " << _height << std::endl
-         << "  Size: " << _size << std::endl
-         << std::endl
-         << "Available Pieces: " << std::endl;
-    
-    for (int i = 0; i < _pieces.size(); i++) {
-        std::cout << _pieces[i] << std::endl;
-    }
+void TetravexSolver::solve() {
+    auto begin = std::chrono::steady_clock::now();
+    Piece* solution = solve(_pieces);
+    auto end = std::chrono::steady_clock::now();
 
-    std::cout << "==================================================" << std::endl
-         << std::endl;
+    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+    double s = elapsed.count() / 1e+9;
+    printf("Temps d'execution: %.8fs\n\n", s);
+
+    TetravexSolver::displaySolution(solution);
+
+    if (solution != NULL) {
+        delete[] solution;
+    };
 }

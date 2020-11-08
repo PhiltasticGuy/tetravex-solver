@@ -1,6 +1,6 @@
 #include "MultithreadedSolver.h"
 
-Piece* MultithreadedSolver::solve(const int piece, bool &isComplete) {
+Piece* MultithreadedSolver::solveAction(const int piece, bool &isComplete) {
     Piece* solution = new Piece[_size];
     bool states[_size];
     std::fill(states, states+_size, false);

@@ -3,7 +3,9 @@
 #include "TetravexSolver.h"
 
 class MultithreadedSolver: virtual public TetravexSolver {
-public:
-    Piece* solve(const int piece, bool &isComplete);
-    virtual void solve() =0;
+private:
+    virtual Piece* solve(const std::vector<Piece> pieces) =0;
+    
+protected:
+    Piece* solveAction(const int piece, bool &isComplete);
 };

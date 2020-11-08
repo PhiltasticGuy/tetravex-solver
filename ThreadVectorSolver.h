@@ -11,7 +11,7 @@ private:
     Piece* solve(const std::vector<Piece> pieces);
     
 public:
-    ThreadVectorSolver(const std::vector<Piece> pieces, const int width);
+    ThreadVectorSolver();
     ~ThreadVectorSolver();
     void solve();
 };

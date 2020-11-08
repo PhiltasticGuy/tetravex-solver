@@ -8,6 +8,8 @@
 
 class TetravexSolver {
 private:
+    bool isFileExists(const std::string filename);
+    std::vector<Piece> loadGameData(const std::string filePath);
 
     virtual Piece* solve(const std::vector<Piece> pieces) = 0;
 
@@ -26,9 +28,10 @@ protected:
     void displaySolution(Piece* solution) const;
 
 public:
-    TetravexSolver(const std::vector<Piece> pieces, const int width);
+    TetravexSolver();
     virtual ~TetravexSolver() {
     };
 
-    void solve();
+    void debugPieces();
+    void solve(const std::string filename);
 };

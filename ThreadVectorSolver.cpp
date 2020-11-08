@@ -1,7 +1,7 @@
 #include "ThreadVectorSolver.h"
 
-ThreadVectorSolver::ThreadVectorSolver(const std::vector<Piece> pieces, const int width)
-    : TetravexSolver{pieces, width}
+ThreadVectorSolver::ThreadVectorSolver()
+    : TetravexSolver{}
 {
 }
 
@@ -27,7 +27,8 @@ Piece* ThreadVectorSolver::solve(const std::vector<Piece> pieces) {
             {
                 std::thread::id threadId = std::this_thread::get_id();
                 std::lock_guard<std::mutex> lock(_mutex);
-                printf("Thread 0x%x: END TASK (%.8fs)\n", threadId, s);
+                std::cout << std::fixed << std::setprecision(8)
+                    << "Thread: 0x" << std::hex << threadId << ": END TASK (" << s << "s)" << std::endl;
             }
         };
 

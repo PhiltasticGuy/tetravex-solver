@@ -1,7 +1,7 @@
 #include "ThreadPoolSolver.h"
 
-ThreadPoolSolver::ThreadPoolSolver(const std::vector<Piece> pieces, const int width)
-    : TetravexSolver{pieces, width}
+ThreadPoolSolver::ThreadPoolSolver()
+    : TetravexSolver{}
 {
 }
 

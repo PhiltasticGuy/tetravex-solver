@@ -1,7 +1,7 @@
 #include "IterativeSolver.h"
 
-IterativeSolver::IterativeSolver(const std::vector<Piece> pieces, const int width)
-    : TetravexSolver{pieces, width}
+IterativeSolver::IterativeSolver()
+    : TetravexSolver{}
 {
 }
 

@@ -12,6 +12,6 @@ private:
     Piece* solve(const std::vector<Piece> pieces);
 
 public:
-    ThreadPoolSolver(const std::vector<Piece> pieces, const int width);
+    ThreadPoolSolver();
     ~ThreadPoolSolver();
 };

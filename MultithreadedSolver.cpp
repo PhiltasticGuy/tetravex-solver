@@ -9,15 +9,10 @@ Piece* MultithreadedSolver::solveAction(const int piece, bool &isComplete) {
     std::vector<solve_state> stack;
     stack.push_back(solve_state{0, piece, 0});
     while(!stack.empty() && !isComplete) {
-        // {
-        //     std::lock_guard<std::mutex> lock(_mutex);
-        //     if (isComplete) break;
-        // }
         solve_state current = stack.back();
 
         // cout << "Position: " << current.position << endl;
         if (current.position == _size) {
-            // std::lock_guard<std::mutex> lock(_mutex);
             isComplete = true;
             return solution;
         }
@@ -49,7 +44,9 @@ Piece* MultithreadedSolver::solveAction(const int piece, bool &isComplete) {
                 stack.pop_back();
 
                 // The piece following the one we pushed onto the stack.
-                stack.back().piece = current.popPiece + 1;
+                if (!stack.empty()) {
+                    stack.back().piece = current.popPiece + 1;
+                }
             }
         }
     }

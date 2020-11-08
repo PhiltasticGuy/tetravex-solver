@@ -191,6 +191,66 @@ Piece* Board::solveIteration() {
     return solution;
 }
 
+Piece* Board::solveCore(const int piece, bool &isComplete) {
+    Piece* solution = new Piece[_size];
+    bool states[_size];
+    std::fill(states, states+_size, false);
+    
+    // Set the starting piece.
+    std::vector<solve_state> stack;
+    stack.push_back(solve_state{0, piece, 0});
+    while(!stack.empty() && !isComplete) {
+        {
+            // std::lock_guard<std::mutex> lock(_mutex);
+            // if (isComplete) break;
+        }
+        solve_state current = stack.back();
+
+        // cout << "Position: " << current.position << endl;
+        if (current.position == _size) {
+            isComplete = true;
+            return solution;
+        }
+        else {
+            bool hasPlacedPiece = false;
+            for (int i = current.piece; i < _size; i++) {
+                // cout << "\tPiece: " << i
+                //     << " - " << _pieces[i] << endl;
+                if (!states[i]) {
+                    if (isValidMove(solution, &_pieces[i], current.position)) {
+                        states[i] = true;
+                        solution[current.position] = _pieces[i];
+
+                        // PUSH!!!
+                        stack.push_back(solve_state{current.position+1, 0, i});
+                        hasPlacedPiece = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hasPlacedPiece) {
+                // cout << "\tNo valid pieces for position " << current.position << "!" << endl;
+                
+                // Undo the move since it was invalid!
+                states[current.popPiece] = false;
+                solution[current.position] = Piece::empty();
+                
+                stack.pop_back();
+
+                // The piece following the one we pushed onto the stack.
+                stack.back().piece = current.popPiece + 1;
+            }
+        }
+    }
+
+    if (solution != NULL) {
+        delete[] solution;
+    }
+
+    return NULL;
+}
+
 Piece* Board::solveThreads() {
     Piece* result;
     std::vector<std::thread> vt;
@@ -198,57 +258,18 @@ Piece* Board::solveThreads() {
     bool isComplete = false;
     for (int piece = 0; piece < _size; piece++) {
         auto action = [&isComplete, this, &result, piece]() {
-            Piece* solution = new Piece[_size];
-            bool states[_size];
-            std::fill(states, states+_size, false);
-            
-            // Set the starting piece.
-            std::vector<solve_state> stack;
-            stack.push_back(solve_state{0, piece, 0});
-            while(!stack.empty() && !isComplete) {
-                solve_state current = stack.back();
+            auto begin = std::chrono::steady_clock::now();
+            auto temp = solveCore(piece, isComplete);
+            auto end = std::chrono::steady_clock::now();
+            if (temp != NULL) result = temp;
 
-                // cout << "Position: " << current.position << endl;
-                if (current.position == _size) {
-                    isComplete = true; // MUTEX ME!!!
-                    result = solution; // MUTEX ME!!!
-                    return;
-                }
-                else {
-                    bool hasPlacedPiece = false;
-                    for (int i = current.piece; i < _size; i++) {
-                        // cout << "\tPiece: " << i
-                        //     << " - " << _pieces[i] << endl;
-                        if (!states[i]) {
-                            if (isValidMove(solution, &_pieces[i], current.position)) {
-                                states[i] = true;
-                                solution[current.position] = _pieces[i];
+            auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+            double s = elapsed.count() / 1e+9;
 
-                                // PUSH!!!
-                                stack.push_back(solve_state{current.position+1, 0, i});
-                                hasPlacedPiece = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!hasPlacedPiece) {
-                        // cout << "\tNo valid pieces for position " << current.position << "!" << endl;
-                        
-                        // Undo the move since it was invalid!
-                        states[current.popPiece] = false;
-                        solution[current.position] = Piece::empty();
-                        
-                        stack.pop_back();
-
-                        // The piece following the one we pushed onto the stack.
-                        stack.back().piece = current.popPiece + 1;
-                    }
-                }
-            }
-
-            if (solution != NULL) {
-                delete[] solution;
+            {
+                std::thread::id threadId = std::this_thread::get_id();
+                std::lock_guard<std::mutex> lock(_mutex);
+                printf("Thread 0x%x: END TASK (%.8fs)\n", threadId, s);
             }
         };
 
@@ -265,63 +286,65 @@ Piece* Board::solveThreads() {
 Piece* Board::solveThreadPool() {
     Piece* result;
     
-    ThreadPool tp;
+    ThreadPool tp(49);
     bool isComplete = false;
     for (int piece = 0; piece < _size; piece++) {
         auto action = [&isComplete, this, &result, piece] {
-            Piece* solution = new Piece[_size];
-            bool states[_size];
-            std::fill(states, states + _size, false);
+            auto temp = solveCore(piece, isComplete);
+            if (temp != NULL) result = temp;
+            // Piece* solution = new Piece[_size];
+            // bool states[_size];
+            // std::fill(states, states + _size, false);
             
-            // Set the starting piece.
-            std::vector<solve_state> stack;
-            stack.push_back(solve_state{0, piece, 0});
+            // // Set the starting piece.
+            // std::vector<solve_state> stack;
+            // stack.push_back(solve_state{0, piece, 0});
 
-            while(!stack.empty() && !isComplete) {
-                solve_state current = stack.back();
+            // while(!stack.empty() && !isComplete) {
+            //     solve_state current = stack.back();
 
-                // cout << "Position: " << current.position << endl;
-                if (current.position == _size) {
-                    isComplete = true; // MUTEX ME!!!
-                    result = solution; // std::copy(solution, solution + _size, result);
-                    return;
-                }
-                else {
-                    bool hasPlacedPiece = false;
-                    for (int i = current.piece; i < _size; i++) {
-                        // cout << "\tPiece: " << i
-                        //     << " - " << _pieces[i] << endl;
-                        if (!states[i]) {
-                            if (isValidMove(solution, &_pieces[i], current.position)) {
-                                states[i] = true;
-                                solution[current.position] = _pieces[i];
+            //     // cout << "Position: " << current.position << endl;
+            //     if (current.position == _size) {
+            //         isComplete = true; // MUTEX ME!!!
+            //         result = solution; // std::copy(solution, solution + _size, result);
+            //         return;
+            //     }
+            //     else {
+            //         bool hasPlacedPiece = false;
+            //         for (int i = current.piece; i < _size; i++) {
+            //             // cout << "\tPiece: " << i
+            //             //     << " - " << _pieces[i] << endl;
+            //             if (!states[i]) {
+            //                 if (isValidMove(solution, &_pieces[i], current.position)) {
+            //                     states[i] = true;
+            //                     solution[current.position] = _pieces[i];
 
-                                // PUSH!!!
-                                stack.push_back(solve_state{current.position+1, 0, i});
-                                hasPlacedPiece = true;
-                                break;
-                            }
-                        }
-                    }
+            //                     // PUSH!!!
+            //                     stack.push_back(solve_state{current.position+1, 0, i});
+            //                     hasPlacedPiece = true;
+            //                     break;
+            //                 }
+            //             }
+            //         }
 
-                    if (!hasPlacedPiece) {
-                        // cout << "\tNo valid pieces for position " << current.position << "!" << endl;
+            //         if (!hasPlacedPiece) {
+            //             // cout << "\tNo valid pieces for position " << current.position << "!" << endl;
                         
-                        // Undo the move since it was invalid!
-                        states[current.popPiece] = false;
-                        solution[current.position] = Piece::empty();
+            //             // Undo the move since it was invalid!
+            //             states[current.popPiece] = false;
+            //             solution[current.position] = Piece::empty();
                         
-                        stack.pop_back();
+            //             stack.pop_back();
 
-                        // The piece following the one we pushed onto the stack.
-                        stack.back().piece = current.popPiece + 1;
-                    }
-                }
-            }
+            //             // The piece following the one we pushed onto the stack.
+            //             stack.back().piece = current.popPiece + 1;
+            //         }
+            //     }
+            // }
 
-            if (solution != NULL) {
-                delete[] solution;
-            }
+            // if (solution != NULL) {
+            //     delete[] solution;
+            // }
         };
 
         tp.add(action);

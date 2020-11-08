@@ -30,6 +30,7 @@ private:
     int _height;
 
     std::vector<Piece> _pieces;
+    std::mutex _mutex;
     // Piece* _solution;
 
     // SequentialSolver* _solver;
@@ -53,6 +54,7 @@ public:
     void debug() const;
 
     bool solve();
+    Piece* solveCore(const int piece, bool &isComplete);
     // bool solveRecursive(int position);
     Piece* solveIteration();
     Piece* solveThreads();

@@ -1,0 +1,164 @@
+======================================================================
+ MULTITHREADED - THREAD VECTOR
+======================================================================
+------------------------------------------------------------
+Filename: ./data/8x8.txt
+
+Thread: 0x7f3e98ff1700: END TASK (290.89032720s)
+Thread: 0x7f3eb6232700: END TASK (290.89681730s)
+Thread: 0x7f3eb5a31700: END TASK (290.88030670s)
+Thread: 0x7f3e9cff9700: END TASK (290.89031140s)
+Thread: 0x7f3eb4a2f700: END TASK (290.89023620s)
+Thread: 0x7f3e927e4700: END TASK (290.89032680s)
+Thread: 0x7f3e95feb700: END TASK (290.89032640s)
+Thread: 0x7f3e8afd5700: END TASK (290.89031780s)
+Thread: 0x7f3e8e7dc700: END TASK (290.89032590s)
+Thread: 0x7f3e9f7fe700: END TASK (290.89024600s)
+Thread: 0x7f3ea7fff700: END TASK (290.88037840s)
+Thread: 0x7f3e947e8700: END TASK (290.89033660s)
+Thread: 0x7f3e877ce700: END TASK (290.89034330s)
+Thread: 0x7f3e9effd700: END TASK (290.89031750s)
+Thread: 0x7f3e89fd3700: END TASK (290.89031980s)
+Thread: 0x7f3e99ff3700: END TASK (290.89039280s)
+Thread: 0x7f3e977ee700: END TASK (290.89033840s)
+Thread: 0x7f3e87fcf700: END TASK (290.89032130s)
+Thread: 0x7f3e92fe5700: END TASK (290.89034060s)
+Thread: 0x7f3e957ea700: END TASK (290.89033900s)
+Thread: 0x7f3e9c7f8700: END TASK (290.89033690s)
+Thread: 0x7f3e94fe9700: END TASK (290.89034640s)
+Thread: 0x7f3e88fd1700: END TASK (290.89033060s)
+Thread: 0x7f3e907e0700: END TASK (290.89034480s)
+Thread: 0x7f3eb7234700: END TASK (290.89711940s)
+Thread: 0x7f3e9d7fa700: END TASK (290.89026590s)
+Thread: 0x7f3e8c7d8700: END TASK (290.89034130s)
+Thread: 0x7f3e937e6700: END TASK (290.89034520s)
+Thread: 0x7f3e8f7de700: END TASK (290.89035570s)
+Thread: 0x7f3ea67fc700: END TASK (290.88034970s)
+Thread: 0x7f3e90fe1700: END TASK (290.89035110s)
+Thread: 0x7f3e897d2700: END TASK (290.89040930s)
+Thread: 0x7f3e8a7d4700: END TASK (290.89034530s)
+Thread: 0x7f3e9bff7700: END TASK (290.89034500s)
+Thread: 0x7f3e9dffb700: END TASK (290.88037510s)
+Thread: 0x7f3ea4ff9700: END TASK (290.88036850s)
+Thread: 0x7f3eb6a33700: END TASK (290.89686960s)
+Thread: 0x7f3e997f2700: END TASK (290.89036260s)
+Thread: 0x7f3e887d0700: END TASK (290.89034800s)
+Thread: 0x7f3e9a7f4700: END TASK (290.89041440s)
+Thread: 0x7f3eb5230700: END TASK (290.88033770s)
+Thread: 0x7f3e9ffff700: END TASK (290.88037890s)
+Thread: 0x7f3e987f0700: END TASK (290.89037500s)
+Thread: 0x7f3eb7a35700: END TASK (290.89715820s)
+Thread: 0x7f3e9b7f6700: END TASK (290.89034780s)
+Thread: 0x7f3e93fe7700: END TASK (290.89036510s)
+Thread: 0x7f3ea6ffd700: END TASK (290.88036310s)
+Thread: 0x7f3e9aff5700: END TASK (290.89042560s)
+Thread: 0x7f3ea57fa700: END TASK (290.89029400s)
+Thread: 0x7f3e96fed700: END TASK (290.89038750s)
+Thread: 0x7f3e967ec700: END TASK (290.89039090s)
+Thread: 0x7f3e8dfdb700: END TASK (290.89037850s)
+Thread: 0x7f3e8ffdf700: END TASK (290.89038850s)
+Thread: 0x7f3e9e7fc700: END TASK (290.89038350s)
+Thread: 0x7f3e8bfd7700: END TASK (290.89038810s)
+Thread: 0x7f3e8cfd9700: END TASK (290.89039600s)
+Thread: 0x7f3e8efdd700: END TASK (290.89040330s)
+Thread: 0x7f3e917e2700: END TASK (290.89040380s)
+Thread: 0x7f3e97fef700: END TASK (290.89041740s)
+Thread: 0x7f3e8b7d6700: END TASK (290.89040660s)
+Thread: 0x7f3e8d7da700: END TASK (290.89040610s)
+Thread: 0x7f3e91fe3700: END TASK (290.89041390s)
+Thread: 0x7f3ea77fe700: END TASK (290.89033390s)
+Thread: 0x7f3ea5ffb700: END TASK (290.89033730s)
+Temps d'execution: 290.90938740s
+
+Solution: 
+[6 7 8 1] [8 1 3 6] [3 8 0 2] [0 7 8 8] [8 4 7 3] [7 7 6 0] [6 5 6 4] [6 7 3 5] 
+[7 1 7 7] [7 6 3 3] [3 2 2 4] [2 8 8 1] [8 3 8 2] [8 0 0 1] [0 4 6 8] [6 5 7 6] 
+[7 7 5 4] [5 3 7 0] [7 4 6 7] [6 1 8 6] [8 2 6 0] [6 1 8 2] [8 8 3 6] [3 6 1 7] 
+[4 4 3 0] [3 0 8 5] [8 7 6 2] [6 6 2 4] [2 0 3 8] [3 2 3 7] [3 6 7 2] [7 7 5 2] 
+[7 0 3 2] [3 5 3 7] [3 2 5 0] [5 4 6 0] [6 8 2 8] [2 7 3 5] [3 2 3 3] [3 2 8 8] 
+[8 2 4 4] [4 7 1 5] [1 0 3 3] [3 0 8 7] [8 8 0 8] [0 5 1 8] [1 3 7 4] [7 8 7 8] 
+[4 4 1 0] [1 5 7 7] [7 3 3 2] [3 7 4 8] [4 8 1 0] [1 8 6 0] [6 4 4 2] [4 8 2 8] 
+[2 0 4 4] [4 7 3 0] [3 2 3 8] [3 8 8 6] [8 0 0 1] [0 0 7 2] [7 2 3 6] [3 8 1 1] 
+------------------------------------------------------------
+======================================================================
+ MULTITHREADED - THREAD POOL
+======================================================================
+------------------------------------------------------------
+Filename: ./data/8x8.txt
+
+Thread: 0x7f3e88fd1700: END TASK (309.95907060s)
+Thread: 0x7f3e8e7dc700: END TASK (309.87924630s)
+Thread: 0x7f3e9cff9700: END TASK (309.78924040s)
+Thread: 0x7f3e8f7de700: END TASK (309.80924800s)
+Thread: 0x7f3ea6ffd700: END TASK (309.93925600s)
+Thread: 0x7f3e9a7f4700: END TASK (309.92925510s)
+Thread: 0x7f3e8efdd700: END TASK (309.85924790s)
+Thread: 0x7f3e9aff5700: END TASK (309.91926320s)
+Thread: 0x7f3e8a7d4700: END TASK (309.74926840s)
+Thread: 0x7f3e95feb700: END TASK (309.89925670s)
+Thread: 0x7f3e997f2700: END TASK (309.90926750s)
+Thread: 0x7f3e957ea700: END TASK (309.88925650s)
+Thread: 0x7f3e9effd700: END TASK (309.84927110s)
+Thread: 0x7f3e887d0700: END TASK (309.95462220s)
+Thread: 0x7f3e9b7f6700: END TASK (309.89926270s)
+Thread: 0x7f3e927e4700: END TASK (309.82924720s)
+Thread: 0x7f3e92fe5700: END TASK (309.88926740s)
+Thread: 0x7f3e99ff3700: END TASK (309.80927400s)
+Thread: 0x7f3e90fe1700: END TASK (309.87927290s)
+Thread: 0x7f3eb6232700: END TASK (309.80926230s)
+Thread: 0x7f3e987f0700: END TASK (309.83926360s)
+Thread: 0x7f3e98ff1700: END TASK (309.91927680s)
+Thread: 0x7f3e9dffb700: END TASK (309.85926870s)
+Thread: 0x7f3ea5ffb700: END TASK (309.81927530s)
+Thread: 0x7f3e977ee700: END TASK (309.90912090s)
+Thread: 0x7f3e8b7d6700: END TASK (309.78744080s)
+Thread: 0x7f3e96fed700: END TASK (309.82928050s)
+Thread: 0x7f3ea7fff700: END TASK (309.85922110s)
+Thread: 0x7f3e94fe9700: END TASK (309.89927620s)
+Thread: 0x7f3e937e6700: END TASK (309.87928810s)
+Thread: 0x7f3e8afd5700: END TASK (309.77927380s)
+Thread: 0x7f3eb7a35700: END TASK (309.94928600s)
+Thread: 0x7f3e907e0700: END TASK (309.79928870s)
+Thread: 0x7f3e897d2700: END TASK (309.95915580s)
+Thread: 0x7f3e9f7fe700: END TASK (309.83928180s)
+Thread: 0x7f3e877ce700: END TASK (309.95913230s)
+Thread: 0x7f3e9d7fa700: END TASK (309.93928870s)
+Thread: 0x7f3e8d7da700: END TASK (309.84929680s)
+Thread: 0x7f3e9c7f8700: END TASK (309.92928860s)
+Thread: 0x7f3e9bff7700: END TASK (309.78929610s)
+Thread: 0x7f3e8cfd9700: END TASK (309.77929970s)
+Thread: 0x7f3e97fef700: END TASK (309.81929200s)
+Thread: 0x7f3e8dfdb700: END TASK (309.86929720s)
+Thread: 0x7f3e91fe3700: END TASK (309.86930010s)
+Thread: 0x7f3e967ec700: END TASK (309.84930850s)
+Thread: 0x7f3eb7234700: END TASK (309.95911060s)
+Thread: 0x7f3e8bfd7700: END TASK (309.76930190s)
+Thread: 0x7f3e947e8700: END TASK (309.82930690s)
+Thread: 0x7f3e93fe7700: END TASK (309.88929940s)
+Thread: 0x7f3ea4ff9700: END TASK (309.79931460s)
+Thread: 0x7f3e9e7fc700: END TASK (309.90931330s)
+Thread: 0x7f3e9ffff700: END TASK (309.91931880s)
+Thread: 0x7f3e8c7d8700: END TASK (309.81932500s)
+Thread: 0x7f3eb5a31700: END TASK (309.83932040s)
+Thread: 0x7f3e87fcf700: END TASK (309.95915020s)
+Thread: 0x7f3eb6a33700: END TASK (309.94933220s)
+Thread: 0x7f3e8ffdf700: END TASK (309.86925700s)
+Thread: 0x7f3e917e2700: END TASK (309.79929350s)
+Thread: 0x7f3eb5230700: END TASK (309.93934360s)
+Thread: 0x7f3eb4a2f700: END TASK (309.95909150s)
+Thread: 0x7f3ea77fe700: END TASK (309.92934930s)
+Thread: 0x7f3e89fd3700: END TASK (309.75935770s)
+Thread: 0x7f3ea57fa700: END TASK (309.94935420s)
+Thread: 0x7f3ea67fc700: END TASK (309.94935980s)
+Temps d'execution: 309.97372310s
+
+Solution: 
+[6 7 8 1] [8 1 3 6] [3 8 0 2] [0 7 8 8] [8 4 7 3] [7 7 6 0] [6 5 6 4] [6 7 3 5] 
+[7 1 7 7] [7 6 3 3] [3 2 2 4] [2 8 8 1] [8 3 8 2] [8 0 0 1] [0 4 6 8] [6 5 7 6] 
+[7 7 5 4] [5 3 7 0] [7 4 6 7] [6 1 8 6] [8 2 6 0] [6 1 8 2] [8 8 3 6] [3 6 1 7] 
+[4 4 3 0] [3 0 8 5] [8 7 6 2] [6 6 2 4] [2 0 3 8] [3 2 3 7] [3 6 7 2] [7 7 5 2] 
+[7 0 3 2] [3 5 3 7] [3 2 5 0] [5 4 6 0] [6 8 2 8] [2 7 3 5] [3 2 3 3] [3 2 8 8] 
+[8 2 4 4] [4 7 1 5] [1 0 3 3] [3 0 8 7] [8 8 0 8] [0 5 1 8] [1 3 7 4] [7 8 7 8] 
+[4 4 1 0] [1 5 7 7] [7 3 3 2] [3 7 4 8] [4 8 1 0] [1 8 6 0] [6 4 4 2] [4 8 2 8] 
+[2 0 4 4] [4 7 3 0] [3 2 3 8] [3 8 8 6] [8 0 0 1] [0 0 7 2] [7 2 3 6] [3 8 1 1] 
+------------------------------------------------------------

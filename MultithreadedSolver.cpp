@@ -6,8 +6,7 @@ Piece* MultithreadedSolver::solveAction(const int piece, bool &isComplete) {
     std::fill(states, states+_size, false);
     
     // Set the starting piece.
-    std::vector<solve_state> stack;
-    stack.push_back(solve_state{0, piece, 0});
+    std::vector<solve_state> stack{ solve_state{0, piece, 0} };
     while(!stack.empty() && !isComplete) {
         solve_state current = stack.back();
 

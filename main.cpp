@@ -39,20 +39,20 @@ int main(int argc, char** argv) {
     //######################################################################//
     // Sequential - Iterative
     //######################################################################//
-    cout << "======================================================================" << endl
-         << " SEQUENTIAL - ITERATIVE" << endl
-         << "======================================================================" << endl;
-    solver = new IterativeSolver();
-    for(std::string filename : filenames) {
-        cout << "------------------------------------------------------------" << endl
-             << "Filename: " << filename << endl
-             << endl;
-        solver->solve(filename);
-        cout << "------------------------------------------------------------" << endl;
-    }
-    if (solver != NULL) {
-        delete solver;
-    }
+    // cout << "======================================================================" << endl
+    //      << " SEQUENTIAL - ITERATIVE" << endl
+    //      << "======================================================================" << endl;
+    // solver = new IterativeSolver();
+    // for(std::string filename : filenames) {
+    //     cout << "------------------------------------------------------------" << endl
+    //          << "Filename: " << filename << endl
+    //          << endl;
+    //     solver->solve(filename);
+    //     cout << "------------------------------------------------------------" << endl;
+    // }
+    // if (solver != NULL) {
+    //     delete solver;
+    // }
     //######################################################################//
 
     //######################################################################//
@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
          << " MULTITHREADED - THREAD VECTOR" << endl
          << "======================================================================" << endl;
     solver = new ThreadVectorSolver();
-    // solver->solve("./data/6x6.txt");
+    // solver->solve("./data/7x7.txt");
     for(std::string filename : filenames) {
         cout << "------------------------------------------------------------" << endl
              << "Filename: " << filename << endl
@@ -78,20 +78,20 @@ int main(int argc, char** argv) {
     //######################################################################//
     // MULTITHREADED - THREAD POOL
     //######################################################################//
-    cout << "======================================================================" << endl
-         << " MULTITHREADED - THREAD POOL" << endl
-         << "======================================================================" << endl;
-    solver = new ThreadPoolSolver();
-    for(std::string filename : filenames) {
-        cout << "------------------------------------------------------------" << endl
-             << "Filename: " << filename << endl
-             << endl;
-        solver->solve(filename);
-        cout << "------------------------------------------------------------" << endl;
-    }
-    if (solver != NULL) {
-        delete solver;
-    }
+    // cout << "======================================================================" << endl
+    //      << " MULTITHREADED - THREAD POOL" << endl
+    //      << "======================================================================" << endl;
+    // solver = new ThreadPoolSolver();
+    // for(std::string filename : filenames) {
+    //     cout << "------------------------------------------------------------" << endl
+    //          << "Filename: " << filename << endl
+    //          << endl;
+    //     solver->solve(filename);
+    //     cout << "------------------------------------------------------------" << endl;
+    // }
+    // if (solver != NULL) {
+    //     delete solver;
+    // }
     //######################################################################//
 
     return 0;

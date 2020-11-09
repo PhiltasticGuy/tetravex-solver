@@ -3,6 +3,9 @@
 TetravexSolver::TetravexSolver() {
 }
 
+TetravexSolver::~TetravexSolver() {
+};
+
 bool TetravexSolver::isValidMove(const Piece* solution, const Piece* piece, const int index) const {
     const int leftIdx = index - 1,
         topIdx = index - _width,
